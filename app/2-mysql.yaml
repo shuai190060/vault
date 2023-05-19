@@ -1,0 +1,133 @@
+#----------------------------------------------------------------------------------------------------
+# storage
+#----------------------------------------------------------------------------------------------------
+
+# ---
+# kind: StorageClass
+# apiVersion: storage.k8s.io/v1
+# metadata:
+#   name: local-storage
+#   namespace: app
+# provisioner: kubernetes.io/no-provisioner
+# volumeBindingMode: WaitForFirstConsumer
+
+# # volume for SQL
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: mysql-local-pv
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: local-storage
+#   local:
+#     path: "/mnt/data"
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: kubernetes.io/hostname
+#           operator: In
+#           values:
+#           - cka-test-control-plane
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-local-pvc
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage
+
+
+#----------------------------------------------------------------------------------------------------
+# statefulset
+#----------------------------------------------------------------------------------------------------
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:latest
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-password
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        - name: MYSQL_AUTHENTICATION_PLUGIN
+          value: "mysql_native_password" 
+        - name: MYSQL_DATABASE
+          value: "my_database"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+        - name: mysql-config
+          mountPath: /etc/mysql/my.cnf
+          readOnly: true
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-local-pvc
+      # - name: mysql-config
+      #   secret:
+      #     secretName: mysql-config
+
+#----------------------------------------------------------------------------------------------------
+# service
+#----------------------------------------------------------------------------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: app
+spec:
+  selector:
+    app: mysql
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
+
+  
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: app
+type: Opaque
+data:
+  mysql-password: "MTIz"

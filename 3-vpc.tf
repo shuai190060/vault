@@ -17,10 +17,11 @@ resource "aws_internet_gateway" "igw_vault" {
 
 # public subnets
 resource "aws_subnet" "public_subnet" {
-  count             = length(var.public_cidrblock)
-  vpc_id            = aws_vpc.vpc_vault.id
-  cidr_block        = var.public_cidrblock[count.index]
-  availability_zone = var.av_zone[count.index]
+  count                   = length(var.public_cidrblock)
+  vpc_id                  = aws_vpc.vpc_vault.id
+  cidr_block              = var.public_cidrblock[count.index]
+  availability_zone       = var.av_zone[count.index]
+  map_public_ip_on_launch = true
 
   tags = {
     "Name"                        = "public-${var.av_zone[0]}"
@@ -59,8 +60,8 @@ resource "aws_eip" "eip" {
 # nat gateway for private subnets
 resource "aws_nat_gateway" "nat" {
   count         = length(var.av_zone)
-  allocation_id = aws_eip.eip[count.index]
-  subnet_id     = aws_subnet.private_subnet[count.index]
+  allocation_id = aws_eip.eip[count.index].id 
+  subnet_id     = aws_subnet.public_subnet[count.index].id
 
   depends_on = [aws_internet_gateway.igw_vault]
 

@@ -4,14 +4,17 @@ resource "aws_eks_cluster" "vault" {
   role_arn = aws_iam_role.vault.arn
   version  = "1.26"
 
+
   vpc_config {
     endpoint_private_access = false
     endpoint_public_access  = true
     public_access_cidrs     = ["0.0.0.0/0"]
 
     subnet_ids = [
-      aws_subnet.private_subnet.*.id,
-      aws_subnet.public_subnet.*.id
+      aws_subnet.private_subnet[0].id,
+      aws_subnet.private_subnet[1].id,
+      aws_subnet.public_subnet[0].id,
+      aws_subnet.public_subnet[1].id
     ]
   }
 
@@ -38,7 +41,7 @@ resource "aws_eks_node_group" "nodes" {
   node_group_name = "nodes-vault"
   node_role_arn   = aws_iam_role.nodes.arn
 
-  subnet_ids = [aws_subnet.private_subnet.*.id]
+  subnet_ids = [aws_subnet.private_subnet[0].id, aws_subnet.private_subnet[1].id]
 
   capacity_type  = "ON_DEMAND"
   instance_types = ["t3.small"]
@@ -51,6 +54,10 @@ resource "aws_eks_node_group" "nodes" {
 
   update_config {
     max_unavailable = 1
+  }
+
+  labels = {
+    role = "general"
   }
 
   depends_on = [
