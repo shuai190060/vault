@@ -60,7 +60,7 @@ resource "aws_eip" "eip" {
 # nat gateway for private subnets
 resource "aws_nat_gateway" "nat" {
   count         = length(var.av_zone)
-  allocation_id = aws_eip.eip[count.index].id 
+  allocation_id = aws_eip.eip[count.index].id
   subnet_id     = aws_subnet.public_subnet[count.index].id
 
   depends_on = [aws_internet_gateway.igw_vault]

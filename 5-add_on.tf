@@ -1,11 +1,11 @@
 
 resource "aws_eks_addon" "addons" {
 
-  cluster_name      = aws_eks_cluster.vault.id
-  addon_name        = "aws-ebs-csi-driver"
-  addon_version     = "v1.18.0-eksbuild.1"
+  cluster_name             = aws_eks_cluster.vault.id
+  addon_name               = "aws-ebs-csi-driver"
+  addon_version            = "v1.18.0-eksbuild.1"
   service_account_role_arn = aws_iam_role.eks_ebs_csi_driver.arn
-  resolve_conflicts = "OVERWRITE"
+  resolve_conflicts        = "OVERWRITE"
 }
 
 
