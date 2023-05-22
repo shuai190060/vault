@@ -26,7 +26,7 @@ resource "aws_subnet" "public_subnet" {
   tags = {
     "Name"                        = "public-${var.av_zone[0]}"
     "kubernetes.io/role/elb"      = "1"     # public elb
-    "kubernetes.io/cluster/vault" = "owned" # under cluster demo
+    "kubernetes.io/cluster/vault_cluster" = "owned" # under cluster demo
   }
 
 }
@@ -41,7 +41,7 @@ resource "aws_subnet" "private_subnet" {
   tags = {
     "Name"                            = "private-${var.av_zone[count.index]}"
     "kubernetes.io/role/internal-elb" = "1"     # private elb
-    "kubernetes.io/cluster/vault"     = "owned" # under cluster vault
+    "kubernetes.io/cluster/vault_cluster"     = "owned" # under cluster vault
     #   "karpenter.sh/discovery" = "true"    # incase i want to auto scale node with karpenter
 
   }
