@@ -4,3 +4,5 @@ key-pair.tf
 terraform.tfstate
 terraform.tfstate.backup
 /cert-manager
+/nginx-controller
+ca.crt
