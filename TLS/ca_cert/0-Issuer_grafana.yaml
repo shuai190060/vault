@@ -1,0 +1,58 @@
+
+# ----------------------------------------------------------------------------------------------------------
+# for letsencrypt you can only use issuer to create certificate, challenge, certificate request
+# ----------------------------------------------------------------------------------------------------------
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-grafana
+  namespace: app
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: shuai190060@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-grafana
+    solvers:
+    - http01:
+        ingress:
+          class:  external-nginx
+
+
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: ClusterIssuer
+# metadata:
+#   name: monitor-letsencrypt-staging
+# spec:
+#   acme: 
+#     email: shuai190060roy@gmail.com
+#     server: https://acme-staging-v02.api.letsencrypt.org/directory
+#     privateKeySecretRef:
+#       name: letsencrypt-staging-monitor-key-pair
+#     solvers:
+#     - http01:
+#         ingress: 
+#           class: external-nginx
+
+
+
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: ClusterIssuer
+# metadata:
+#   name: monitor-letsencrypt-production
+# spec:
+#   acme: 
+#     email: shuai190060roy@gmail.com
+#     server: https://acme-v02.api.letsencrypt.org/directory
+#     privateKeySecretRef:
+#       name: letsencrypt-production-monitor-key-pair
+#     solvers:
+#     - http01:
+#         ingress: 
+#           class: external-nginx
+
+# ----------------------------------------------------------------------------------------------------------
