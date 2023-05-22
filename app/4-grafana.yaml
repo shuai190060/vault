@@ -1,0 +1,92 @@
+# -------------------------------------------------------------------------------------
+# Grafana and service
+# -------------------------------------------------------------------------------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: admin # admin username
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: admin
+          volumeMounts:
+            - name: grafana-data
+              mountPath: /var/lib/grafana
+      volumes:
+        - name: grafana-data
+          emptyDir: {}
+
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  namespace: app
+data:
+  grafana.ini: |
+    [server]
+    http_port = 3000
+    root_url = "%(protocol)s://%(domain)s:%(http_port)s/grafana"
+    [auth.anonymous]
+    enabled = true
+    [auth.basic]
+    enabled = false
+    [auth.generic_oauth]
+    enabled = false
+    [auth.google_oauth]
+    enabled = false
+    [auth.ldap]
+    enabled = false
+    [auth.proxy]
+    enabled = false
+    [auth.github]
+    enabled = false
+    [auth.grafana_com]
+    enabled = false
+    [auth.okta]
+    enabled = false
+    [auth.saml]
+    enabled = false
+    [smtp]
+    enabled = false
+    [analytics]
+    enabled = false
+    [security]
+    admin_user = admin 
+    admin_password = admin
+# here is the password that also need to be encrpyt
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: app
+spec:
+  selector:
+    app: grafana
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+  type: ClusterIP

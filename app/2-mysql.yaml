@@ -47,7 +47,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: local-storage
+  storageClassName: ebs-sc 
 
 
 #----------------------------------------------------------------------------------------------------
@@ -92,9 +92,9 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-        - name: mysql-config
-          mountPath: /etc/mysql/my.cnf
-          readOnly: true
+        # - name: mysql-config
+        #   mountPath: /etc/mysql/my.cnf
+        #   readOnly: true
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:

@@ -25,9 +25,9 @@ output "endpoint" {
   value = aws_eks_cluster.vault.endpoint
 }
 
-output "kubeconfig-certificate-authority-data" {
-  value = aws_eks_cluster.vault.certificate_authority[0].data
-}
+# output "kubeconfig-certificate-authority-data" {
+#   value = aws_eks_cluster.vault.certificate_authority[0].data
+# }
 
 output "eks_cluster_id" {
   value = aws_eks_cluster.vault.id
@@ -45,6 +45,7 @@ resource "aws_eks_node_group" "nodes" {
 
   capacity_type  = "ON_DEMAND"
   instance_types = ["t3.small"]
+  disk_size = 10
 
   scaling_config {
     desired_size = 2
@@ -60,6 +61,9 @@ resource "aws_eks_node_group" "nodes" {
     role = "general"
   }
 
+  remote_access {
+    ec2_ssh_key = "ec2-learning"
+  }
   depends_on = [
     aws_iam_role_policy_attachment.nodes_amazon_eks_worker_node_policy,
     aws_iam_role_policy_attachment.nodes_amazon_eks_cni_policy,
