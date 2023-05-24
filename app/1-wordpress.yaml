@@ -29,6 +29,7 @@ metadata:
   namespace: app
   labels:
     app: wordpress
+    version: "01"
 spec:
   replicas: 1
   selector:
