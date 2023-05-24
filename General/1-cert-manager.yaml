@@ -4,4 +4,4 @@ kind: Namespace
 metadata:
   name: cert-manager
   labels:
-    monitoring: prometheus
+    prometheus: watched
