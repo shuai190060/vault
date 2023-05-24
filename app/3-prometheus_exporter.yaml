@@ -1,116 +1,118 @@
-# -------------------------------------------------------------------------------------
-# prometheus and service
-# -------------------------------------------------------------------------------------
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: prometheus
-  namespace: app
-spec:
-  selector:
-    matchLabels:
-      app: prometheus
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: prometheus
-    spec:
-      containers:
-        - name: prometheus
-          image: prom/prometheus
-          args:
-            - "--config.file=/etc/prometheus/prometheus-config.yaml"  
-          ports:
-            - containerPort: 9090
-          volumeMounts:
-            - name: config-volume
-              mountPath: /etc/prometheus  
-      volumes:
-        - name: config-volume
-          configMap:
-            name: prometheus-config  
+# # -------------------------------------------------------------------------------------
+# # prometheus and service
+# # -------------------------------------------------------------------------------------
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: prometheus
+#   namespace: app
+# spec:
+#   selector:
+#     matchLabels:
+#       app: prometheus
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: prometheus
+#     spec:
+#       containers:
+#         - name: prometheus
+#           image: prom/prometheus
+#           args:
+#             - "--config.file=/etc/prometheus/prometheus-config.yaml"  
+#           ports:
+#             - containerPort: 9090
+#           volumeMounts:
+#             - name: config-volume
+#               mountPath: /etc/prometheus  
+#       volumes:
+#         - name: config-volume
+#           configMap:
+#             name: prometheus-config  
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus
-  namespace: app
-  labels:
-    app: prometheus
-spec:
-  selector:
-    app: prometheus
-  ports:
-    - protocol: TCP
-      port: 9090
-      targetPort: 9090
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: prometheus
+#   namespace: app
+#   labels:
+#     app: prometheus
+# spec:
+#   selector:
+#     app: prometheus
+#   ports:
+#     - protocol: TCP
+#       port: 9090
+#       targetPort: 9090
 
-# -------------------------------------------------------------------------------------
-# prometheus mysql exporter ,config and service
-# -------------------------------------------------------------------------------------
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mysql-exporter
-  namespace: app
-  labels:
-    app: mysql-exporter
-spec:
-  selector:
-    matchLabels:
-      app: mysql-exporter
-  template:
-    metadata:
-      labels:
-        app: mysql-exporter
-    spec:
-      containers:
-        - name: mysql-exporter
-          image: prom/mysqld-exporter
-          ports:
-            - containerPort: 9104
-          env:
-            - name: DATA_SOURCE_NAME
-              value: "root:123@tcp(mysql-0:3306)/" 
-              # also need to encryt this as secret
-
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql-exporter
-  namespace: app
-spec:
-  selector:
-    app: mysql-exporter
-  ports:
-    - name: http
-      protocol: TCP
-      port: 9104
-      targetPort: 9104
+# # -------------------------------------------------------------------------------------
+# # prometheus mysql exporter ,config and service
+# # -------------------------------------------------------------------------------------
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: mysql-exporter
+#   namespace: app
+#   labels:
+#     app: mysql-exporter
+# spec:
+#   selector:
+#     matchLabels:
+#       app: mysql-exporter
+#   template:
+#     metadata:
+#       labels:
+#         app: mysql-exporter
+#     spec:
+#       containers:
+#         - name: mysql-exporter
+#           image: prom/mysqld-exporter
+#           ports:
+#             - containerPort: 9104
+#           env:
+#             - name: DATA_SOURCE_NAME
+#               value: "root:123@tcp(mysql-0:3306)/" 
+#               # also need to encryt this as secret
 
 
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-config
-  namespace: app
-data:
-  prometheus-config.yaml: |-
-    global:
-      scrape_interval: 15s
-      evaluation_interval: 1m
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mysql-exporter
+#   namespace: app
+#   labels:
+#     app: mysql-exporter
+# spec:
+#   selector:
+#     app: mysql-exporter
+#   ports:
+#     - name: http
+#       protocol: TCP
+#       port: 9104
+#       targetPort: 9104
 
-    scrape_configs:
-      - job_name: 'wordpress'
-        static_configs:
-          - targets: ['wordpress-service:80']
-      - job_name: 'mysql'
-        static_configs:
-          - targets: ['mysql-exporter:9104']
+
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: prometheus-config
+#   namespace: app
+# data:
+#   prometheus-config.yaml: |-
+#     global:
+#       scrape_interval: 15s
+#       evaluation_interval: 1m
+
+#     scrape_configs:
+#       - job_name: 'wordpress'
+#         static_configs:
+#           - targets: ['wordpress-service:80']
+#       - job_name: 'mysql'
+#         static_configs:
+#           - targets: ['mysql-exporter:9104']
