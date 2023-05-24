@@ -6,3 +6,6 @@ terraform.tfstate.backup
 /cert-manager
 /nginx-controller
 ca.crt
+/TLS/tls_monitor
+/archive
+/argocd/archive_yaml
