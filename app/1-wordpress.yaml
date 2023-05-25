@@ -41,7 +41,7 @@ spec:
         app: wordpress
     spec:
       containers:
-      - image: darwimroy1900/wordpress:v0.1.1
+      - image: darwimroy1900/wordpress:$$VERSION
         name: wordpress
         env:
         - name: WORDPRESS_DB_HOST
