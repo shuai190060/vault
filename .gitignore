@@ -9,3 +9,9 @@ ca.crt
 /TLS/tls_monitor
 /archive
 /argocd/archive_yaml
+/git_key
+/vault/test
+/vault/test-1
+/vault/secretproviderclass
+
+/app/secret_for_handy.yaml
