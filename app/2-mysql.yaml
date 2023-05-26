@@ -1,39 +1,4 @@
-#----------------------------------------------------------------------------------------------------
-# storage
-#----------------------------------------------------------------------------------------------------
 
-# ---
-# kind: StorageClass
-# apiVersion: storage.k8s.io/v1
-# metadata:
-#   name: local-storage
-#   namespace: app
-# provisioner: kubernetes.io/no-provisioner
-# volumeBindingMode: WaitForFirstConsumer
-
-# # volume for SQL
-# ---
-# kind: PersistentVolume
-# apiVersion: v1
-# metadata:
-#   name: mysql-local-pv
-# spec:
-#   capacity:
-#     storage: 1Gi
-#   accessModes:
-#     - ReadWriteOnce
-#   persistentVolumeReclaimPolicy: Retain
-#   storageClassName: local-storage
-#   local:
-#     path: "/mnt/data"
-#   nodeAffinity:
-#     required:
-#       nodeSelectorTerms:
-#       - matchExpressions:
-#         - key: kubernetes.io/hostname
-#           operator: In
-#           values:
-#           - cka-test-control-plane
 
 ---
 kind: PersistentVolumeClaim
@@ -77,6 +42,7 @@ spec:
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
+          # this is to use secret mount
             secretKeyRef:
               name: mysql-secret
               key: mysql-password
@@ -92,6 +58,7 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+          # for configure the mysql exporter config
         # - name: mysql-config
         #   mountPath: /etc/mysql/my.cnf
         #   readOnly: true
@@ -99,6 +66,7 @@ spec:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-local-pvc
+          # for configure the mysql exporter config
       # - name: mysql-config
       #   secret:
       #     secretName: mysql-config
@@ -122,12 +90,13 @@ spec:
   type: ClusterIP
 
   
+
+
 ---
 apiVersion: v1
-kind: Secret
+kind: ServiceAccount
 metadata:
   name: mysql-secret
   namespace: app
-type: Opaque
-data:
-  mysql-password: "MTIz"
+  labels:
+    app: mysql-secret
