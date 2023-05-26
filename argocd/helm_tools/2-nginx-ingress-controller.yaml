@@ -1,0 +1,63 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.4.2
+    chart: ingress-nginx
+    helm:
+      version: v3
+      releaseName: ingress-nginx
+      passCredentials: false
+      # parameters:
+      #   - name: ""
+      #     value: v0.6.2
+      values: |
+        controller:
+          ingressClassResource:
+            name: external-nginx
+          admissionWebhooks:
+            enable: false
+          service: 
+            annotations:
+              service.beta.kubernetes.io/aws-load-balancer-type: nlb
+        # required for ACME
+          watchIngressWithoutClass: true
+          extraArgs:
+            ingress-class: external-nginx
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - CreateNamespace=true
+      
+
+
+
+# resource "helm_release" "nginx_ingress_controller" {
+#   name = "ingress-nginx"
+#   repository = "https://kubernetes.github.io/ingress-nginx"
+#   chart = "ingress-nginx"
+#   version = "4.4.2"
+#   values = [ "${file("ingress-nginx-values.yaml")}" ]
+
+#   namespace = "ingress"
+#   create_namespace = true
+
+# }
