@@ -6,6 +6,7 @@ terraform.tfstate.backup
 /cert-manager
 /nginx-controller
 ca.crt
+sample.log
 /TLS/tls_monitor
 /archive
 /argocd/archive_yaml
@@ -13,5 +14,10 @@ ca.crt
 /vault/test
 /vault/test-1
 /vault/secretproviderclass
-
+/EFS_experiment
 /app/secret_for_handy.yaml
+/karpenter/test
+
+/logging/0-elasticsearch
+/logging/1-elasticsearch
+/logging/fluent-bit_values.yaml
