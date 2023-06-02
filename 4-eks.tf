@@ -44,12 +44,12 @@ resource "aws_eks_node_group" "nodes" {
   subnet_ids = [aws_subnet.private_subnet[0].id, aws_subnet.private_subnet[1].id]
 
   capacity_type  = "ON_DEMAND"
-  instance_types = ["t3.small"]
+  instance_types = ["t3.medium"]
   disk_size      = 10
 
   scaling_config {
-    desired_size = 2
-    max_size     = 3
+    desired_size = 1
+    max_size     = 4
     min_size     = 0
   }
 
