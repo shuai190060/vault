@@ -29,3 +29,34 @@ Two options to detect update and roll out the new deployment
 - argocd image updater to watch the image update from docker hub
 
 ## Metrics
+
+- kube-state-metric
+- cadvisor
+- visualisation (Grafana)
+
+## Node auto-scaling
+
+- scaling base on cpu usage
+- initiate with 1 t3.Medium instance, scale up with c5,m5,r5. medium/large
+- refer to Karpenter provisioner in folder `/karpenter`
+
+## Security
+
+- mTLS with cert-manager
+    - Letsencrypt
+    - domain *.shuhai.de
+- secret ingestion
+    - vault
+        - need to provision vault first in the cluster first
+        - create secret and configure the kube-config in vault
+
+## Logging
+
+- logs shipper: fluent-bit
+- log: container logs
+- process: send logs to `cloudwatch`, then `subscriber filter` to send logs to `Elasticsearch domain`
+
+## Others
+
+- ingress controller: Nginx
+- storage: EBS(add-on is ready), EFS(need to provision and setup security group)
