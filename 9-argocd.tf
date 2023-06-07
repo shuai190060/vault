@@ -1,11 +1,11 @@
-# resource "helm_release" "argocd" {
-#   name = "argocd"
+resource "helm_release" "argocd" {
+  name = "argocd"
 
-#   repository       = "https://argoproj.github.io/argo-helm"
-#   chart            = "argo-cd"
-#   namespace        = "argocd"
-#   create_namespace = true
-#   version          = "3.35.4"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  namespace        = "argocd"
+  create_namespace = true
+  version          = "3.35.4"
 
-#   values = ["${file("argo_values.yaml")}"]
-# }
+  values = ["${file("./argocd/values/argo_values.yaml")}"]
+}
