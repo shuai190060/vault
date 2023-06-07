@@ -1,0 +1,20 @@
+mysql:
+  db: ""
+  host: "mysql-service.app.svc.cluster.local"
+  param: ""
+  pass: "123"
+  port: 3306
+  protocol: "tcp"
+  user: "root"
+
+serviceMonitor:
+  # enabled should be set to true to enable prometheus-operator discovery of this service
+  enabled: true
+  # interval is the interval at which metrics should be scraped
+  # interval: 30s
+  # scrapeTimeout is the timeout after which the scrape is ended
+  # scrapeTimeout: 10s
+  # namespace: monitoring
+  # additionalLabels is the set of additional labels to add to the ServiceMonitor
+  additionalLabels: 
+    prometheus: watched
