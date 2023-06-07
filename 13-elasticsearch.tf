@@ -176,14 +176,3 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_attachment" {
 
 
 
-# ------------------------------------------------------------------------
-# log subscription filter
-# ------------------------------------------------------------------------
-# resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_to_elasticsearch" {
-#   name            = "cloudwatch_to_elasticsearch"
-#   role_arn        = aws_iam_role.cloudwatch_to_opensearch_role.arn
-#   log_group_name  = "/aws/eks/fluentbit-cloudwatch/workload/logging"
-#   filter_pattern  = "app"
-#   destination_arn = aws_elasticsearch_domain.elasticsearch_vault.arn
-#   distribution    = "Random"
-# }

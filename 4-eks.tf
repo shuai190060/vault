@@ -61,9 +61,9 @@ resource "aws_eks_node_group" "nodes" {
     role = "general"
   }
 
-  remote_access {
-    ec2_ssh_key = "ec2-learning"
-  }
+  # remote_access {
+  #   ec2_ssh_key = "ec2-learning"
+  # }
   depends_on = [
     aws_iam_role_policy_attachment.nodes_amazon_eks_worker_node_policy,
     aws_iam_role_policy_attachment.nodes_amazon_eks_cni_policy,

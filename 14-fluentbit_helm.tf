@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------
-# this is not working, because of lack of permission setup..?
+# fluent-bit, send data to aws cloudwatch
 # ------------------------------------------------------------------------
 resource "helm_release" "fluent_bit" {
   name       = "my-fluent-bit"
@@ -10,7 +10,7 @@ resource "helm_release" "fluent_bit" {
   create_namespace = true
 
   
-  values = [ "${file("aws-for-fluent-bit_values.yaml")}" ]
+  values = [ "${file("./logging/values/aws-for-fluent-bit_values.yaml")}" ]
 #   set {
 #     name  = "elasticsearch.enabled"
 #     value = "true"

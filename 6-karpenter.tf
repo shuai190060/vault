@@ -108,6 +108,16 @@ resource "helm_release" "karpenter" {
     value = "KarpenterNodeInstanceProfile"
   }
 
+  set {
+    name = "controller.resources.requests.cpu"
+    value = "500m"
+  }
+
+  set {
+    name = "controller.resources.requests.memory"
+    value = "500Mi"
+  }
+
   depends_on = [ aws_eks_node_group.nodes ]
 }
 
