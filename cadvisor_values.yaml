@@ -1,8 +1,0 @@
-serviceMonitor:
-
-
-    ## Additional labels
-    ##
-    additionalLabels: 
-      prometheus: watched
-
