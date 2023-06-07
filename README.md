@@ -20,6 +20,46 @@ The idea is to have a playground to deploy and test app the common DevOps tools,
 - aws web services
 - Terraform, kubectl and helm
 
+## How to deploy:
+
+- initiate the eks cluster with 1 t3.medium node, and with karpenter provisioned.
+    
+    ```jsx
+    # initiate the cluster by running this script
+    ./init.sh
+    
+    # apply the karpenter provisioner and AWSnodetemplate
+    kubectl apply -f karpenter/0-provisioner.yaml
+    ```
+    
+- Optional install the tools with helm package manager by running script
+    
+    ```jsx
+    # install by running script
+    ./tools_helm.sh <the number reflect the package>
+    ```
+    
+    | Number | Package | Name space |
+    | --- | --- | --- |
+    | 7 | nginx ingress controller | ingress-nginx |
+    | 8 | prometheus-stack | monitoring |
+    | 9 | argocd | argocd |
+    | 10 | argocd-image-updater | argocd |
+    | 11 | vault | vault |
+    | 12 | sealed-secret | kube-system |
+    | 13 | elasticsearch  | N/A |
+    | 14 | fluent-bit | logging |
+    | 15 | EFS | N/A |
+    | 16 | cert-manager | cert-manager |
+    | 17 | Istio | istio-system, istio-ingress |
+- clean up
+    
+    ```jsx
+    # clean up by running script
+    ./clean.sh
+    ```
+
+
 ## CI/CD
 
 Two options to detect update and roll out the new deployment
