@@ -52,6 +52,8 @@ The idea is to have a playground to deploy and test app the common DevOps tools,
     | 15 | EFS | N/A |
     | 16 | cert-manager | cert-manager |
     | 17 | Istio | istio-system, istio-ingress |
+    | 18 | aws application load balancer | kube-system |
+    
 - clean up
     
     ```jsx
