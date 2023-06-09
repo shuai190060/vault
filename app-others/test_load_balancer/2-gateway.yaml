@@ -19,12 +19,12 @@ spec:
     hosts:
     - app.papavonning.com
 
-  # - port:
-  #       number: 443
-  #       name: https
-  #       protocol: HTTPS
-  #   hosts:
-  #     - app.papavonning.com
-    # tls:
-    #   credentialName: acme-crt-secret-app-nginx
-    #   mode: SIMPLE
+  - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+    hosts:
+      - app.papavonning.com
+    tls:
+      credentialName: acme-crt-secret-app-nginx
+      mode: SIMPLE
